@@ -11,12 +11,13 @@ import { MetaLink } from 'components/Link';
 import { Web3Context } from 'contexts/Web3Context';
 import React, { useCallback, useContext } from 'react';
 
-import { useUser } from '../lib/hooks';
+import { useUser, useWeb3 } from '../lib/hooks';
 import { getPlayerImage, getPlayerName } from '../utils/playerHelpers';
 
 export const LoginButton: React.FC = () => {
   const { connectWeb3, disconnect, isConnected } = useContext(Web3Context);
 
+  const { address } = useWeb3();
   const { user, fetching } = useUser();
 
   const handleLoginClick = useCallback(async () => {
@@ -45,7 +46,9 @@ export const LoginButton: React.FC = () => {
             {user.player ? getPlayerName(user.player) : 'Unknown'}
           </MetaLink>
           <HStack spacing={2}>
-            <MetaLink href="/profile/setup">Setup profile</MetaLink>
+            <MetaLink href="/profile/setup/username">
+              {user.username && user.username !== address ? 'Edit profile' : 'Setup profile'}
+            </MetaLink>
             <Text color="cyan.400">|</Text>
             <Button
               onClick={disconnect}
